@@ -22,6 +22,10 @@ public class Mapper {
         return Uri.parse(url);
     }
 
+    public <T> List<T> query(Class<T> cls) throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
+        return query(cls, null, null);
+    }
+
     public <T> List<T> query(Class<T> cls, String selection, String[] selectionArgs) throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
         List<T> result = new ArrayList<>();
 

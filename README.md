@@ -1,4 +1,4 @@
-# Quick Resto - Content Provider
+# Quick Resto - Content Provider Mapper
 
 ## Download
 
@@ -9,5 +9,5 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 
-compile 'com.github.wand123:qrcp:0.0.5+'
+compile 'com.github.skornei:qrcp:0.0.5+'
 ```

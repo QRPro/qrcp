@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.quickresto.qrcp.Cache;
-import ru.quickresto.qrcp.annotations.Resolver;
+import ru.quickresto.qrcp.annotations.ResolverEntity;
 
 public class Mapper {
 
@@ -25,8 +25,8 @@ public class Mapper {
     public <T> List<T> query(Class<T> cls, String selection, String[] selectionArgs) throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
         List<T> result = new ArrayList<>();
 
-        if (cls.isAnnotationPresent(Resolver.class)) {
-            Uri uri = getUri(cls.getAnnotation(Resolver.class).url());
+        if (cls.isAnnotationPresent(ResolverEntity.class)) {
+            Uri uri = getUri(cls.getAnnotation(ResolverEntity.class).url());
             String[] fields = {};
 
             Cursor cursor = getContentResolver().query(uri, fields, selection, selectionArgs, null);

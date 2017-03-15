@@ -67,6 +67,7 @@ public final class Mapper {
         return result;
     }
 
+    @SuppressWarnings("unchecked")
     private static <T> void parseField(Cursor cursor, T entity, Class<T> cls, Field field)
             throws NoSuchFieldException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Class<?> fieldType = field.getType();

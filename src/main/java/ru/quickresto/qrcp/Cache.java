@@ -1,19 +1,20 @@
 package ru.quickresto.qrcp;
 
+import android.content.ContentResolver;
 import android.content.Context;
 
 public final class Cache {
 
-    private static Context sContext;
+    private static ContentResolver sContentResolver;
 
     private Cache() {
     }
 
     public static synchronized void initialize(Context context) {
-        sContext = context;
+        sContentResolver = context.getContentResolver();
     }
 
-    public static Context getContext() {
-        return sContext;
+    public static ContentResolver getContentResolver() {
+        return sContentResolver;
     }
 }

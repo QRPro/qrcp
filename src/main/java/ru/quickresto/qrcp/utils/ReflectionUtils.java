@@ -26,9 +26,7 @@ public class ReflectionUtils {
     }
 
     public static void invokeSetter(Object object, Field field, Object value) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = object.getClass().getMethod("set"+field.getName()
-                .replaceFirst(field.getName().substring(0, 1), field.getName()
-                        .substring(0, 1).toUpperCase()),field.getType());
+        Method method = object.getClass().getMethod("set" + field.getName().substring(0, 1).toUpperCase() + field.getName().substring(1), field.getType());
 
         method.invoke(object, value);
     }

@@ -43,7 +43,7 @@ public final class Mapper {
         List<T> result = new ArrayList<>();
 
         if (cls.isAnnotationPresent(ResolverEntity.class)) {
-            Uri uri = getUri(cls.getAnnotation(ResolverEntity.class).url());
+            Uri uri = getUri(cls.getAnnotation(ResolverEntity.class).value());
             String[] fields = {};
 
             Cursor cursor = getContentResolver().query(uri, fields, selection, selectionArgs, null);

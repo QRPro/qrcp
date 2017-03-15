@@ -20,38 +20,16 @@ public class ReflectionUtils {
         Field field = findFieldByName(type, name);
 
         if (field.isAnnotationPresent(ResolverField.class)) {
-            return field.getAnnotation(ResolverField.class).name();
+            return field.getAnnotation(ResolverField.class).value();
         }
 
         return null;
-    }
-
-    private static Field findFieldByName(Class<?> cls, String name) throws NoSuchFieldException {
-        Class<?> c = cls;
-        while (c != null) {
-            try {
-                return c.getDeclaredField(name);
-            } catch (NoSuchFieldException e) {}
-            c = c.getSuperclass();
-        }
-        throw new NoSuchFieldException(name);
     }
 
     public static void invokeSetter(Object object, Field field, Object value) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Method method = findMethodByName(object.getClass(), "set" + field.getName().substring(0, 1).toUpperCase() + field.getName().substring(1), field.getType());
 
         method.invoke(object, value);
-    }
-
-    private static Method findMethodByName(Class<?> cls, String name, Class<?> fieldType) throws NoSuchMethodException {
-        Class<?> c = cls;
-        while (c != null) {
-            try {
-                return c.getMethod(name, fieldType);
-            } catch (NoSuchMethodException e) {}
-            c = c.getSuperclass();
-        }
-        throw new NoSuchMethodException(name);
     }
 
     public static List<Field> getDeclaredColumnFields(Class<?> type) {
@@ -71,5 +49,27 @@ public class ReflectionUtils {
         }
 
         return declaredColumnFields;
+    }
+
+    private static Field findFieldByName(Class<?> cls, String name) throws NoSuchFieldException {
+        Class<?> c = cls;
+        while (c != null) {
+            try {
+                return c.getDeclaredField(name);
+            } catch (NoSuchFieldException e) {}
+            c = c.getSuperclass();
+        }
+        throw new NoSuchFieldException(name);
+    }
+
+    private static Method findMethodByName(Class<?> cls, String name, Class<?> fieldType) throws NoSuchMethodException {
+        Class<?> c = cls;
+        while (c != null) {
+            try {
+                return c.getMethod(name, fieldType);
+            } catch (NoSuchMethodException e) {}
+            c = c.getSuperclass();
+        }
+        throw new NoSuchMethodException(name);
     }
 }

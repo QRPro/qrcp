@@ -12,25 +12,28 @@ import java.util.List;
 import ru.quickresto.qrcp.Cache;
 import ru.quickresto.qrcp.annotations.ResolverEntity;
 
-public class Mapper {
+public final class Mapper {
 
-    private ContentResolver getContentResolver() {
-        return Cache.getContext().getContentResolver();
+    private Mapper() {
     }
 
-    private Uri getUri(String url) {
+    private static ContentResolver getContentResolver() {
+        return Cache.getContentResolver();
+    }
+
+    private static Uri getUri(String url) {
         return Uri.parse(url);
     }
 
-    public <T> T query(Class<T> cls) throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
+    public static <T> T query(Class<T> cls) throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
         return null;
     }
 
-    public <T> List<T> queryAll(Class<T> cls) throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
+    public static <T> List<T> queryAll(Class<T> cls) throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
         return queryAll(cls, null, null);
     }
 
-    public <T> List<T> queryAll(Class<T> cls, String selection, String[] selectionArgs) throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
+    public static <T> List<T> queryAll(Class<T> cls, String selection, String[] selectionArgs) throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
         List<T> result = new ArrayList<>();
 
         if (cls.isAnnotationPresent(ResolverEntity.class)) {

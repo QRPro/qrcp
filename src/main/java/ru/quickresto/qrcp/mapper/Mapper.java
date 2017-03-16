@@ -1,10 +1,10 @@
 package ru.quickresto.qrcp.mapper;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
@@ -28,6 +28,34 @@ public final class Mapper {
         return Uri.parse(url);
     }
 
+    public static void insert(Object object) throws IllegalAccessException, NoSuchFieldException {
+        if (object.getClass().isAnnotationPresent(ResolverEntity.class)) {
+            Uri uri = getUri(object.getClass().getAnnotation(ResolverEntity.class).value());
+
+            ContentValues values = new ContentValues();
+
+            List<Field> fields = ReflectionUtils.getDeclaredColumnFields(object.getClass());
+            for (Field field : fields) {
+                Class<?> fieldType = field.getType();
+                String fieldDeclaredName = ReflectionUtils.getFieldDeclaredName(object.getClass(), field.getName());
+
+                if (fieldType.isAssignableFrom(Integer.class)) {
+                    values.put(fieldDeclaredName, (Integer) field.get(object));
+                } else if (fieldType.isAssignableFrom(String.class)) {
+                    values.put(fieldDeclaredName, (String) field.get(object));
+                } /* else if (fieldType.isAssignableFrom(BigDecimal.class)) {
+                        values.put(fieldDeclaredName, (BigDecimal) field.get(object));
+                    }*/ else if (fieldType.isAssignableFrom(Boolean.class)) {
+                    values.put(fieldDeclaredName, (Boolean) field.get(object));
+                } /*else if (fieldType.isEnum()) {
+                        values.put(fieldDeclaredName, (Enum) field.get(object));
+                    }  */
+            }
+
+            getContentResolver().insert(uri, values);
+        }
+    }
+
     public static <T> T query(Class<T> cls)
             throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
         return null;
@@ -44,9 +72,8 @@ public final class Mapper {
 
         if (cls.isAnnotationPresent(ResolverEntity.class)) {
             Uri uri = getUri(cls.getAnnotation(ResolverEntity.class).value());
-            String[] fields = {};
 
-            Cursor cursor = getContentResolver().query(uri, fields, selection, selectionArgs, null);
+            Cursor cursor = getContentResolver().query(uri, null, selection, selectionArgs, null);
             if (cursor != null) {
                 try {
                     while (cursor.moveToNext()) {

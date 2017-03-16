@@ -43,9 +43,9 @@ public final class Mapper {
                     values.put(fieldDeclaredName, (Integer) field.get(object));
                 } else if (fieldType.isAssignableFrom(String.class)) {
                     values.put(fieldDeclaredName, (String) field.get(object));
-                } /* else if (fieldType.isAssignableFrom(BigDecimal.class)) {
-                        values.put(fieldDeclaredName, (BigDecimal) field.get(object));
-                    }*/ else if (fieldType.isAssignableFrom(Boolean.class)) {
+                }  else if (fieldType.isAssignableFrom(BigDecimal.class)) {
+                    values.put(fieldDeclaredName, ((BigDecimal) field.get(object)).doubleValue());
+                } else if (fieldType.isAssignableFrom(Boolean.class)) {
                     values.put(fieldDeclaredName, (Boolean) field.get(object));
                 } else if (fieldType.isEnum()) {
                     values.put(fieldDeclaredName, field.get(object).toString());

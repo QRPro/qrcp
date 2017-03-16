@@ -48,7 +48,7 @@ public final class Mapper {
                     }*/ else if (fieldType.isAssignableFrom(Boolean.class)) {
                     values.put(fieldDeclaredName, (Boolean) field.get(object));
                 } else if (fieldType.isEnum()) {
-                        values.put(fieldDeclaredName, field.get(object).toString());
+                    values.put(fieldDeclaredName, field.get(object).toString());
                 }
             }
 

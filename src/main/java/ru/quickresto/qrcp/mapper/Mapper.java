@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -13,6 +14,8 @@ import java.util.List;
 
 import ru.quickresto.qrcp.Cache;
 import ru.quickresto.qrcp.annotations.ResolverEntity;
+import ru.quickresto.qrcp.exceptions.InsertException;
+import ru.quickresto.qrcp.exceptions.QueryException;
 import ru.quickresto.qrcp.utils.ReflectionUtils;
 
 public final class Mapper {
@@ -28,67 +31,70 @@ public final class Mapper {
         return Uri.parse(url);
     }
 
-    public static void insert(Object object) throws IllegalAccessException, NoSuchFieldException {
-        if (object.getClass().isAnnotationPresent(ResolverEntity.class)) {
-            Uri uri = getUri(object.getClass().getAnnotation(ResolverEntity.class).value());
+    public static void insert(Object object) {
+        try {
+            if (object.getClass().isAnnotationPresent(ResolverEntity.class)) {
+                Uri uri = getUri(object.getClass().getAnnotation(ResolverEntity.class).value());
 
-            ContentValues values = new ContentValues();
+                ContentValues values = new ContentValues();
 
-            List<Field> fields = ReflectionUtils.getDeclaredColumnFields(object.getClass());
-            for (Field field : fields) {
-                Class<?> fieldType = field.getType();
-                String fieldDeclaredName = ReflectionUtils.getFieldDeclaredName(object.getClass(), field.getName());
+                List<Field> fields = ReflectionUtils.getDeclaredColumnFields(object.getClass());
+                for (Field field : fields) {
+                    Class<?> fieldType = field.getType();
+                    String fieldDeclaredName = ReflectionUtils.getFieldDeclaredName(object.getClass(), field.getName());
 
-                if (fieldType.isAssignableFrom(Integer.class)) {
-                    values.put(fieldDeclaredName, (Integer) field.get(object));
-                } else if (fieldType.isAssignableFrom(String.class)) {
-                    values.put(fieldDeclaredName, (String) field.get(object));
-                }  else if (fieldType.isAssignableFrom(BigDecimal.class)) {
-                    values.put(fieldDeclaredName, field.get(object).toString());
-                } else if (fieldType.isAssignableFrom(Boolean.class)) {
-                    values.put(fieldDeclaredName, (Boolean) field.get(object));
-                } else if (fieldType.isEnum()) {
-                    values.put(fieldDeclaredName, field.get(object).toString());
+                    if (fieldType.isAssignableFrom(Integer.class)) {
+                        values.put(fieldDeclaredName, (Integer) field.get(object));
+                    } else if (fieldType.isAssignableFrom(String.class)) {
+                        values.put(fieldDeclaredName, (String) field.get(object));
+                    } else if (fieldType.isAssignableFrom(BigDecimal.class)) {
+                        values.put(fieldDeclaredName, field.get(object).toString());
+                    } else if (fieldType.isAssignableFrom(Boolean.class)) {
+                        values.put(fieldDeclaredName, (Boolean) field.get(object));
+                    } else if (fieldType.isEnum()) {
+                        values.put(fieldDeclaredName, field.get(object).toString());
+                    }
                 }
-            }
 
-            getContentResolver().insert(uri, values);
+                getContentResolver().insert(uri, values);
+            }
+        } catch (Exception e) {
+            Log.e(Mapper.class.getName(), e.getLocalizedMessage(), e);
+            throw new InsertException();
         }
     }
 
-    public static <T> T query(Class<T> cls)
-            throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
-        return null;
-    }
-
-    public static <T> List<T> queryAll(Class<T> cls)
-            throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException, NoSuchFieldException {
+    public static <T> List<T> queryAll(Class<T> cls) {
         return queryAll(cls, null, null);
     }
 
-    public static <T> List<T> queryAll(Class<T> cls, String selection, String[] selectionArgs)
-            throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException, NoSuchFieldException {
+    public static <T> List<T> queryAll(Class<T> cls, String selection, String[] selectionArgs) {
         List<T> result = new ArrayList<>();
 
-        if (cls.isAnnotationPresent(ResolverEntity.class)) {
-            Uri uri = getUri(cls.getAnnotation(ResolverEntity.class).value());
+        try {
+            if (cls.isAnnotationPresent(ResolverEntity.class)) {
+                Uri uri = getUri(cls.getAnnotation(ResolverEntity.class).value());
 
-            Cursor cursor = getContentResolver().query(uri, null, selection, selectionArgs, null);
-            if (cursor != null) {
-                try {
-                    while (cursor.moveToNext()) {
+                Cursor cursor = getContentResolver().query(uri, null, selection, selectionArgs, null);
+                if (cursor != null) {
+                    try {
+                        while (cursor.moveToNext()) {
 
-                        T entity = cls.newInstance();
-                        for (Field field : ReflectionUtils.getDeclaredColumnFields(cls)) {
-                            parseField(cursor, entity, cls, field);
+                            T entity = cls.newInstance();
+                            for (Field field : ReflectionUtils.getDeclaredColumnFields(cls)) {
+                                parseField(cursor, entity, cls, field);
+                            }
+                            result.add(entity);
                         }
-                        result.add(entity);
+                    } finally {
+                        cursor.close();
                     }
-                } finally {
-                    cursor.close();
                 }
-            }
 
+            }
+        } catch (Exception e) {
+            Log.e(Mapper.class.getName(), e.getLocalizedMessage(), e);
+            throw new QueryException();
         }
 
         return result;

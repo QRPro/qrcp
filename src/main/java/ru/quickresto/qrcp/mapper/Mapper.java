@@ -44,15 +44,17 @@ public final class Mapper {
                     String fieldDeclaredName = ReflectionUtils.getFieldDeclaredName(object.getClass(), field.getName());
 
                     if (fieldType.isAssignableFrom(Integer.class)) {
-                        values.put(fieldDeclaredName, (Integer) field.get(object));
+                        values.put(fieldDeclaredName, (Integer) ReflectionUtils.invokeGetter(object, field));
                     } else if (fieldType.isAssignableFrom(String.class)) {
-                        values.put(fieldDeclaredName, (String) field.get(object));
+                        values.put(fieldDeclaredName, (String) ReflectionUtils.invokeGetter(object, field));
                     } else if (fieldType.isAssignableFrom(BigDecimal.class)) {
-                        values.put(fieldDeclaredName, field.get(object).toString());
+                        BigDecimal value = (BigDecimal) ReflectionUtils.invokeGetter(object, field);
+                        values.put(fieldDeclaredName, value != null ? value.toString() : null);
                     } else if (fieldType.isAssignableFrom(Boolean.class)) {
-                        values.put(fieldDeclaredName, (Boolean) field.get(object));
+                        values.put(fieldDeclaredName, (Boolean) ReflectionUtils.invokeGetter(object, field));
                     } else if (fieldType.isEnum()) {
-                        values.put(fieldDeclaredName, field.get(object).toString());
+                        Enum value = (Enum) ReflectionUtils.invokeGetter(object, field);
+                        values.put(fieldDeclaredName, value != null ? value.toString() : null);
                     }
                 }
 

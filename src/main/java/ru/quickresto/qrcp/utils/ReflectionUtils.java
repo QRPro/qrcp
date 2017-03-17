@@ -3,12 +3,9 @@ package ru.quickresto.qrcp.utils;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import ru.quickresto.qrcp.annotations.ResolverEntity;
 import ru.quickresto.qrcp.annotations.ResolverField;
 
 public class ReflectionUtils {
@@ -24,6 +21,13 @@ public class ReflectionUtils {
         }
 
         return null;
+    }
+
+    public static Object invokeGetter(Object object, Field field) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method method = findMethodByName(object.getClass(), (field.getType().isAssignableFrom(Boolean.class) ? "is" : "get") +
+                field.getName().substring(0, 1).toUpperCase() + field.getName().substring(1));
+
+        return method.invoke(object);
     }
 
     public static void invokeSetter(Object object, Field field, Object value) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
@@ -62,7 +66,7 @@ public class ReflectionUtils {
         throw new NoSuchFieldException(name);
     }
 
-    private static Method findMethodByName(Class<?> cls, String name, Class<?> fieldType) throws NoSuchMethodException {
+    private static Method findMethodByName(Class<?> cls, String name, Class<?>... fieldType) throws NoSuchMethodException {
         Class<?> c = cls;
         while (c != null) {
             try {

@@ -11,12 +11,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import ru.quickresto.qrcp.Cache;
 import ru.quickresto.qrcp.annotations.ResolverEntity;
 import ru.quickresto.qrcp.exceptions.InsertException;
 import ru.quickresto.qrcp.exceptions.QueryException;
 import ru.quickresto.qrcp.utils.ReflectionUtils;
+import rx.Observable;
 
 public final class Mapper {
 
@@ -64,6 +66,19 @@ public final class Mapper {
             Log.e(Mapper.class.getName(), e.getLocalizedMessage(), e);
             throw new InsertException();
         }
+    }
+
+    public static <T> Observable<List<T>> query(Class<T> cls) {
+        return query(cls, null, null);
+    }
+
+    public static <T> Observable<List<T>> query(final Class<T> cls, final String selection, final String[] selectionArgs) {
+        return Observable.fromCallable(new Callable<List<T>>() {
+            @Override
+            public List<T> call() throws Exception {
+                return queryAll(cls, selection, selectionArgs);
+            }
+        });
     }
 
     public static <T> List<T> queryAll(Class<T> cls) {

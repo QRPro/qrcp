@@ -16,7 +16,9 @@ compile 'com.github.skornei:qrcp:1.0.0+'
 ```
 
 ## Documentation
-* [Getting started](https://github.com/skornei/qrcp/wiki/Getting-started)
+* [Getting started](https://github.com/skornei/qrcp/wiki/Getting-started))
+* [Filter entities](https://github.com/skornei/qrcp/wiki/Filter-entities)
+* [rxJava](https://github.com/skornei/qrcp/wiki/rxJava)
 
 ## License
 

@@ -16,11 +16,13 @@ import ru.quickresto.qrcp.Cache;
 import ru.quickresto.qrcp.annotations.ResolverEntity;
 import ru.quickresto.qrcp.exceptions.InsertException;
 import ru.quickresto.qrcp.exceptions.QueryException;
+import ru.quickresto.qrcp.utils.FilterUtils;
 import ru.quickresto.qrcp.utils.ReflectionUtils;
 
 public final class Mapper {
 
     private Mapper() {
+        throw new RuntimeException();
     }
 
     private static ContentResolver getContentResolver() {
@@ -67,17 +69,26 @@ public final class Mapper {
     }
 
     public static <T> List<T> queryAll(Class<T> cls) {
-        return queryAll(cls, null, null);
+        return queryAll(cls, null, null, null);
     }
 
-    public static <T> List<T> queryAll(Class<T> cls, String selection, String[] selectionArgs) {
+    public static <T> List<T> queryAll(Class<T> cls, String[] fields, String[] operators, String[] values) {
         List<T> result = new ArrayList<>();
 
         try {
             if (cls.isAnnotationPresent(ResolverEntity.class)) {
                 Uri uri = getUri(cls.getAnnotation(ResolverEntity.class).value());
 
-                Cursor cursor = getContentResolver().query(uri, null, selection, selectionArgs, null);
+                String selection = null;
+                if (fields != null) {
+                    if (operators == null || values == null || operators.length != fields.length || values.length != fields.length) {
+                        throw new IllegalArgumentException("Invalid filter arrays");
+                    }
+
+                    selection = FilterUtils.buildFilter(fields, operators);
+                }
+
+                Cursor cursor = getContentResolver().query(uri, null, selection, values, null);
                 if (cursor != null) {
                     try {
                         while (cursor.moveToNext()) {

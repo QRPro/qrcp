@@ -8,6 +8,7 @@ public final class Cache {
     private static ContentResolver sContentResolver;
 
     private Cache() {
+        throw new RuntimeException();
     }
 
     public static synchronized void initialize(Context context) {

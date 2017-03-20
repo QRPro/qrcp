@@ -11,6 +11,7 @@ import ru.quickresto.qrcp.annotations.ResolverField;
 public class ReflectionUtils {
 
     private ReflectionUtils() {
+        throw new RuntimeException();
     }
 
     public static String getFieldDeclaredName(Class<?> type, String name) throws NoSuchFieldException {

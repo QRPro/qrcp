@@ -62,7 +62,7 @@ public final class Mapper {
 
                 getContentResolver().insert(uri, values);
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             Log.e(Mapper.class.getName(), e.getLocalizedMessage(), e);
             throw new InsertException();
         }
@@ -85,7 +85,7 @@ public final class Mapper {
                         throw new IllegalArgumentException("Invalid filter arrays");
                     }
 
-                    selection = FilterUtils.buildFilter(fields, operators);
+                    selection = FilterUtils.buildFilter(cls, fields, operators);
                 }
 
                 Cursor cursor = getContentResolver().query(uri, null, selection, values, null);
@@ -105,7 +105,7 @@ public final class Mapper {
                 }
 
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             Log.e(Mapper.class.getName(), e.getLocalizedMessage(), e);
             throw new QueryException();
         }

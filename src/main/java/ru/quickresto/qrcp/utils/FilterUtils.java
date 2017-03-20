@@ -6,10 +6,10 @@ public class FilterUtils {
         throw new RuntimeException();
     }
 
-    public static String buildFilter(String[] fields, String[] operators) {
+    public static String buildFilter(Class<?> type, String[] fields, String[] operators) throws NoSuchFieldException {
         StringBuilder selection = new StringBuilder();
         for (int i = 0; i < fields.length; i++) {
-            selection.append(fields[i])
+            selection.append(ReflectionUtils.getFieldDeclaredName(type, fields[i]))
                     .append(operators[i])
                     .append("?");
         }

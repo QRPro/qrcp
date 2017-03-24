@@ -64,7 +64,7 @@ public final class Mapper {
             }
         } catch (Throwable e) {
             Log.e(Mapper.class.getName(), e.getLocalizedMessage(), e);
-            throw new InsertException();
+            throw new InsertException(e.getLocalizedMessage());
         }
     }
 
@@ -107,7 +107,7 @@ public final class Mapper {
             }
         } catch (Throwable e) {
             Log.e(Mapper.class.getName(), e.getLocalizedMessage(), e);
-            throw new QueryException();
+            throw new QueryException(e.getLocalizedMessage());
         }
 
         return result;

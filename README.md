@@ -1,7 +1,7 @@
 Quick Resto - Content Provider Mapper
 ========
 
-Content Provider mapper for Android by Quick Resto, Inc.
+Content Provider mapper for Android by Quick Resto, LLC.
 
 ## Download
 
@@ -18,7 +18,7 @@ compile 'com.github.skornei:qrcp:1.0.0+'
 ## Documentation
 * [Getting started](https://github.com/skornei/qrcp/wiki/Getting-started)
 * [Filter entities](https://github.com/skornei/qrcp/wiki/Filter-entities)
-* [rxJava](https://github.com/skornei/qrcp/wiki/rxJava)
+* [rxJava support](https://github.com/skornei/qrcp/wiki/rxJava)
 
 ## License
 

@@ -4,8 +4,8 @@ import org.junit.Test;
 
 import ru.quickresto.qrcp.annotations.ResolverField;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class FilterUtilsTest {
 
@@ -24,13 +24,13 @@ public class FilterUtilsTest {
     }
 
     @Test
-    public void test() {
+    public void testBuildFilter() {
         String selection = null;
         try {
             selection = FilterUtils.buildFilter(Entity.class, new String[]{"name"}, new String[]{"="});
         } catch (Throwable e) {}
 
         assertNotNull(selection);
-        assertEquals(selection.contains("testName"), true);
+        assertTrue(selection.contains("testName"));
     }
 }

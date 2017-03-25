@@ -39,7 +39,7 @@ public class ReflectionUtilsTest {
     }
 
     @Test
-    public void test() {
+    public void testGetDeclaredColumnFields() {
         List<Field> fields = ReflectionUtils.getDeclaredColumnFields(Entity.class);
         assertNotNull(fields);
         assertEquals(2, fields.size());

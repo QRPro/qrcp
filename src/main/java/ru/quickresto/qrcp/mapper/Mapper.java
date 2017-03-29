@@ -113,6 +113,10 @@ public final class Mapper {
         return result;
     }
     
+    public static <T> void delete(Class<T> cls) {
+        return delete(cls, null, null);
+    }
+    
     public static <T> void delete(Class<T> cls, String[] fields, String[] operators, String[] values) {
         try {
             if (cls.isAnnotationPresent(ResolverEntity.class)) {

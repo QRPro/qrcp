@@ -112,6 +112,28 @@ public final class Mapper {
 
         return result;
     }
+    
+    public static <T> void delete(Class<T> cls, String[] fields, String[] operators, String[] values) {
+        try {
+            if (cls.isAnnotationPresent(ResolverEntity.class)) {
+                Uri uri = getUri(cls.getAnnotation(ResolverEntity.class).value());
+
+                String where = null;
+                if (fields != null) {
+                    if (operators == null || values == null || operators.length != fields.length || values.length != fields.length) {
+                        throw new IllegalArgumentException("Invalid filter arrays");
+                    }
+
+                    where = FilterUtils.buildFilter(cls, fields, operators);
+                }
+
+                getContentResolver().delete(uri, where, values);
+            }
+        } catch (Throwable e) {
+            Log.e(Mapper.class.getName(), e.getLocalizedMessage(), e);
+            throw new InsertException(e.getLocalizedMessage());
+        }
+    }
 
     @SuppressWarnings("unchecked")
     private static <T> void parseField(Cursor cursor, T entity, Class<T> cls, Field field)

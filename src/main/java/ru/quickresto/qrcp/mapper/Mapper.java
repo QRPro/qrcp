@@ -114,7 +114,7 @@ public final class Mapper {
     }
     
     public static <T> void delete(Class<T> cls) {
-        return delete(cls, null, null);
+        return delete(cls, null, null, null);
     }
     
     public static <T> void delete(Class<T> cls, String[] fields, String[] operators, String[] values) {

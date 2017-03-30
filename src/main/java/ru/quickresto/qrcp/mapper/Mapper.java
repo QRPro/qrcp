@@ -68,11 +68,11 @@ public final class Mapper {
         }
     }
 
-    public static <T> List<T> queryAll(Class<T> cls) {
-        return queryAll(cls, null, null, null);
+    public static <T> List<T> select(Class<T> cls) {
+        return select(cls, null, null, null);
     }
 
-    public static <T> List<T> queryAll(Class<T> cls, String[] fields, String[] operators, String[] values) {
+    public static <T> List<T> select(Class<T> cls, String[] fields, String[] operators, String[] values) {
         List<T> result = new ArrayList<>();
 
         try {
